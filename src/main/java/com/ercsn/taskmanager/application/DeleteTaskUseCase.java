@@ -3,7 +3,9 @@ package com.ercsn.taskmanager.application;
 import com.ercsn.taskmanager.domain.TaskId;
 import com.ercsn.taskmanager.domain.TaskNotFoundException;
 import com.ercsn.taskmanager.domain.TaskRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DeleteTaskUseCase {
     private final TaskRepository repository;
 

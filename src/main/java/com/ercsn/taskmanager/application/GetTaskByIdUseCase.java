@@ -1,10 +1,12 @@
-package com.ercsn.taskmanager;
+package com.ercsn.taskmanager.application;
 
 import com.ercsn.taskmanager.application.output.TaskOutput;
 import com.ercsn.taskmanager.domain.TaskId;
 import com.ercsn.taskmanager.domain.TaskNotFoundException;
 import com.ercsn.taskmanager.domain.TaskRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GetTaskByIdUseCase {
     private final TaskRepository repository;
 

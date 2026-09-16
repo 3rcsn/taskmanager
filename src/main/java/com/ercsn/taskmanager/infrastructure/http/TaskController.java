@@ -1,27 +1,41 @@
 package com.ercsn.taskmanager.infrastructure.http;
 
-import com.ercsn.taskmanager.GetTaskByIdUseCase;
-import com.ercsn.taskmanager.application.CreateTaskUseCase;
-import com.ercsn.taskmanager.application.GetTaskUseCase;
+import com.ercsn.taskmanager.application.*;
+import com.ercsn.taskmanager.domain.TaskId;
 import com.ercsn.taskmanager.infrastructure.http.request.CreateTaskRequest;
+import com.ercsn.taskmanager.infrastructure.http.request.UpdateTaskRequest;
 import com.ercsn.taskmanager.infrastructure.http.response.TaskResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
     private final CreateTaskUseCase createTaskUseCase;
-    private GetTaskUseCase getTaskUseCase;
+    private final GetTaskUseCase getTaskUseCase;
+    private final GetTaskByIdUseCase getTaskByIdUseCase;
+    private final DeleteTaskUseCase deleteTaskUseCase;
+    private final UpdateTaskUseCase updateTaskUseCase;
 
-    public TaskController(CreateTaskUseCase createTaskUseCase, GetTaskUseCase getTaskUseCase) {
+    public TaskController(
+            CreateTaskUseCase createTaskUseCase,
+            GetTaskUseCase getTaskUseCase,
+            GetTaskByIdUseCase getTaskByIdUseCase,
+            DeleteTaskUseCase deleteTaskUseCase,
+            UpdateTaskUseCase updateTaskUseCase) {
         this.createTaskUseCase = createTaskUseCase;
         this.getTaskUseCase = getTaskUseCase;
+        this.getTaskByIdUseCase = getTaskByIdUseCase;
+        this.deleteTaskUseCase = deleteTaskUseCase;
+        this.updateTaskUseCase = updateTaskUseCase;
     }
 
     @PostMapping
-    TaskResponse create(@RequestBody CreateTaskRequest request) {
+    TaskResponse create(@RequestBody @Valid CreateTaskRequest request) {
         var input = request.toInput();
         var output = createTaskUseCase.execute(input);
         return TaskResponse.from(output);
@@ -31,5 +45,26 @@ public class TaskController {
     List<TaskResponse> list() {
         return getTaskUseCase.execute().stream().map(TaskResponse::from).toList();
     }
+
+    @GetMapping("/{id}")
+    TaskResponse read(@PathVariable UUID id) {
+        var output = getTaskByIdUseCase.execute(new TaskId(id));
+        return TaskResponse.from(output);
+
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void delete(@PathVariable UUID id) {
+        deleteTaskUseCase.execute(new TaskId(id));
+    }
+
+    @PatchMapping("/{id}")
+    TaskResponse update(@PathVariable UUID id, @RequestBody UpdateTaskRequest request) {
+        var input = request.toInput();
+        var output = updateTaskUseCase.execute(new TaskId(id), input);
+        return TaskResponse.from(output);
+    }
+
 
 }

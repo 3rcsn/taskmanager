@@ -1,9 +1,13 @@
 package com.ercsn.taskmanager.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.Assert;
 
 import java.util.Optional;
 
+@Getter
+@Setter
 public class Task {
     private TaskId id;
     private String title;
@@ -18,35 +22,10 @@ public class Task {
         this.status = TaskStatus.PENDING;
     }
 
-    public TaskId getId() {
-        return id;
+    public void update(Optional<String> title, Optional<String> description, Optional<TaskStatus> status) {
+        title.ifPresent(this::setTitle);
+        description.ifPresent(d -> this.setDescription(Optional.of(d)));
+        status.ifPresent(this::setStatus);
     }
 
-    public void setId(TaskId id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Optional<String> getDescription() {
-        return description;
-    }
-
-    public void setDescription(Optional<String> description) {
-        this.description = description;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
 }

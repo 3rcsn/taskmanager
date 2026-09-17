@@ -1,0 +1,119 @@
+openapi: "3.1.0"
+info:
+  title: "taskmanager API"
+  description: "taskmanager API"
+  version: "1.0.0"
+servers:
+  - url: "https://taskmanager"
+paths:
+  /tasks/{id}:
+    patch:
+      summary: "PATCH tasks/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+    get:
+      summary: "GET tasks/{id}"
+      operationId: "read"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+  /tasks:
+    post:
+      summary: "POST tasks"
+      operationId: "create"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+    delete:
+      summary: "DELETE tasks"
+      operationId: "delete"
+      responses:
+        "204":
+          description: "No Content"
+    get:
+      summary: "GET tasks"
+      operationId: "list"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TaskResponse"
+components:
+  schemas:
+    UpdateTaskRequest:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+          nullable: true
+        description:
+          type: "string"
+          nullable: true
+        status:
+          type: "string"
+          nullable: true
+    TaskResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          nullable: true
+        title:
+          type: "string"
+          nullable: true
+        description:
+          type: "string"
+          nullable: true
+    CreateTaskRequest:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+          nullable: true
+        description:
+          type: "string"
+          nullable: true

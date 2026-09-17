@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
-
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +80,7 @@ class TaskControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(generatedId))
-        .andExpect(jsonPath("$.title").value(("Aprender Spring RestDoc")))
+        .andExpect(jsonPath("$.title").value(("Aprender Spring RestDocs")))
         .andDo(document("get-task-by-id",
             pathParameters(
                     parameterWithName("id").description("Identificador único da task")
